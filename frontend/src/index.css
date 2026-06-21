@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.pixel-text {
+  font-family: 'Press Start 2P', cursive;
+  text-shadow: 4px 4px 0px #000;
+  image-rendering: pixelated;
+}
+
+.health-bar-container {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), inset 0 0 10px rgba(255, 255, 255, 0.2);
+}
