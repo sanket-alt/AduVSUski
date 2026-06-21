@@ -57,7 +57,13 @@ const fetchInstagramData = async (username) => {
 
 const runTracker = async () => {
   try {
+    // 1. Fetch Player 1
     const p1Data = await fetchInstagramData(P1);
+    
+    // 2. Add a 2-second delay to respect the API's concurrency limits
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // 3. Fetch Player 2
     const p2Data = await fetchInstagramData(P2);
 
     currentStats = {
@@ -68,13 +74,15 @@ const runTracker = async () => {
     io.emit('statsUpdate', currentStats);
     console.log('Broadcasted update:', currentStats);
   } catch (err) {
-    console.log('Polling skipped this cycle due to error.');
+    console.log('Polling skipped this cycle due to rate limit error.');
   }
 };
 
-// Initial run and interval (15 seconds to respect rate limits)
+// Initial run
 runTracker();
-setInterval(runTracker, 15000);
+
+// Change the interval from 15000 (15 seconds) to 60000 (60 seconds)
+setInterval(runTracker, 60000);
 
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
