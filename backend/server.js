@@ -24,7 +24,6 @@ let currentStats = {
 
 const fetchInstagramData = async (username) => {
   if (!process.env.RAPIDAPI_KEY) {
-    // Fallback simulation for local testing if API key is not set
     console.warn('API Key missing. Simulating data for:', username);
     return { follower_count: Math.floor(Math.random() * 50000) + 50000 };
   }
@@ -32,15 +31,24 @@ const fetchInstagramData = async (username) => {
   try {
     const options = {
       method: 'GET',
-      url: `https://${process.env.RAPIDAPI_HOST}/v1/info`,
-      params: { username_or_id_or_url: username },
+      url: `https://${process.env.RAPIDAPI_HOST}/get_ig_user_about.php`, // <-- UPDATED URL
+      params: { 
+        username_or_url: username  // <-- UPDATED PARAMETER
+      },
       headers: {
         'X-RapidAPI-Key': process.env.RAPIDAPI_KEY,
         'X-RapidAPI-Host': process.env.RAPIDAPI_HOST
       }
     };
+    
     const response = await axios.request(options);
-    return response.data.data;
+    
+    // Logging the response so we can see the exact data shape in Render
+    console.log(`Successfully fetched data for ${username}`);
+    
+    // Return the data object. 
+    return response.data.data; 
+    
   } catch (error) {
     console.error(`Error fetching ${username}:`, error.message);
     throw error;
